@@ -31,7 +31,8 @@ jobs:
               env:
                   REPO: ${{ secrets.DOCKER_REPOSITORY }}
               run: |
-                  docker build -f Dockerfile -t $REPO:${{ env.TAG }} .
+                  docker buildx create --name rpi --driver docker-container --use
+                  docker buildx build --platform linux/arm/v7 -f Dockerfile -t $REPO:${{ env.TAG }} --push .
                   docker push $REPO:${{ env.TAG }}
                   
             - name: Deploy
